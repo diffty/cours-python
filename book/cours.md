@@ -71,6 +71,8 @@ Il peut s'agir de n'importe quelle information manipulable en langage Python :
 
 * ...
 
+
+
 ## Assignation
 L'opération d'assignation consiste à stocker une [valeur](#valeur) dans une [variable](#variable).
 
@@ -81,6 +83,8 @@ La syntaxe est la suivante : le nom de la variable qui va recevoir la valeur (ou
 ```python
 nom_variable = 34
 ```
+
+
 
 ## Indentation
 Une ligne de code indentée est une ligne de code décalée sur la droite, par une espaces ou une tabulation (de préférence 4 espaces)
@@ -309,11 +313,19 @@ On peut par exemple déclarer cette liste, comportant 5 cases comprenant des val
 ma_liste_trop_stylee = [1, 4, "Chevale", 3.4, "Ah bon"]
 ```
 
-Chaque case d'une liste est comme une variable à laquelle on peut accéder en ajoutant son numéro de case entre crochets, après le nom de la variable contenant la liste : par exemple pour manipuler la case n°3, on écrit `ma_liste[3]`
+:::{admonition} NOTE
+:class: note
+En Python et contrairement à de nombreux autres langages (ceux que l'on dit "typés" notamment) : chaque case peut avoir un type différent.
+:::
 
-**🚨 IMPORTANT** : La numérotation des cases commence par `0` et non par `1`. La dernière case d'une liste à 10 entrées (par exemple) sera donc numérotée `9`.
+### Accéder à un caractère en particulier
 
-**⚠️ AUTRE NOTE** : En Python et contrairement à de nombreux autres langages (ceux que l'on dit "typés" notamment) : chaque case peut avoir un type différent.
+Chaque case d'une liste est comme une variable à laquelle on peut accéder en ajoutant son numéro de case entre crochets `[]` juste après le nom de la variable désignant la liste : par exemple pour manipuler la case n°`3` de `ma_liste`, on écrit `ma_liste[3]`
+
+:::{admonition} IMPORTANT 🚨
+:class: warning
+La numérotation des cases commence par `0` et non par `1`. La dernière case d'une liste à 10 entrées (par exemple) sera donc numérotée `9`.
+:::
 
 ![image](./img/listes.png)
 
@@ -690,9 +702,9 @@ Dans tous les cas, il suffit généralement simplement d'utiliser le nom du type
 
 ## Classes & Objets
 ### Objet
-Une sorte de super variable pouvant contenir des [attributs](#les-attributs) (équivaut à des variables) et [méthodes](#les-méthodes) (équivaut à des fonctions).
+Une sorte de super variable pouvant encapsuler des [attributs](#les-attributs) (équivaut à des variables) et [méthodes](#les-méthodes) (équivaut à des fonctions).
 
-On appelle ça "objet" car le design/organisation interne des objets s'apparente souvent au fonctionnement de concepts de la vraie vie.
+On appelle ça *"objet"* car le design/l'organisation interne des objets s'apparente souvent au fonctionnement de concepts de la vraie vie.
 
 Le fonctionnement de cette objet, ainsi que sa composition est décrite dans ce que l'on appelle une [classe](#classe). L'action de fabriquer une copie de cet objet suivant les comportements définies par la classe est appelé **instancier la classe**. C'est pour cela qu'un objet peut aussi être appelé une **instance de classe** :)
 

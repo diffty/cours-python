@@ -1,4 +1,4 @@
-# TD 3
+# TD4: Timelapse
 
 ## Intro
 
@@ -8,10 +8,15 @@ On va créer un timelapse !
 
 L'idée du script que nous allons écrire sera d'automatiser la création d'un fichier vidéo MP4 à partir de toutes les images se trouvant dans un dossier (des JPG d'un timelapse de GoPro par exemple).
 
-Pour cela, nous mettrons toutes nos images dans un dossier, et le script les copiera et renommera afin de leur assigner un numéro de frame, avant de lancer l'outil `ffmpeg` qui se chargera d'encoder cette séquence d'image en fichier vidéo.
+Pour cela :
+* nous mettrons toutes nos images dans un dossier
+* puis le script les copiera et renommera afin de leur assigner un numéro de frame
+* avant de lancer l'outil `ffmpeg` qui se chargera d'encoder cette séquence d'image en fichier vidéo.
 
 
 ## Préparation : installer `ffmpeg`
+
+🚨🚨🚨🚨🚨 TODO: expliquer c'est quoi ffmpeg 🚨🚨🚨🚨🚨
 
 Pour cela, 2 solution :
 
@@ -32,19 +37,19 @@ Si besoin, valider les prompts (acceptation de licence, etc) en pressant la touc
 
 * La décompresser quelque part (`C:\ffmpeg` par exemple)
 
-![image](./img/Pasted-image-20231119170816.png)
+  ![image](./img/Pasted-image-20231119170816.png)
 
 * Ouvrez le menu Démarrer puis tapez `env`, avant de choisir l'option **Modifiez les Variables d'environnement**
 
-![image](./img/Pasted-image-20231119170906.png)
+  ![image](./img/Pasted-image-20231119170906.png)
 
 * Ajoutez le chemin complet vers `ffmpeg.exe` (qui devrait se trouver dans le sous-dossier `bin`) à la liste de chemins de la variable d'environnement PATH
 
-![image](./img/Pasted-image-20231119171658.png)
+  ![image](./img/Pasted-image-20231119171658.png)
 
 Dans les 2 cas, `ffmpeg` devrait à présent être accessible peu importe où vous vous trouverez dans votre invite de commande !
 
-![image](./img/Pasted-image-20231119172123.png)
+  ![image](./img/Pasted-image-20231119172123.png)
 
 
 ## ℹ️ Avant de commencer
@@ -56,24 +61,44 @@ Un zip contenant une série d'images GoPro vous sera fourni si besoin.
 Bon courage !
 
 
-## 1 · Créer 2 variables pour les chemins
+## 1 · Créer 2 variables pour stocker les chemins contenant les images
 
-* l'une qui contiendra un chemin vers le dossier contenant les photos dont on veut faire le timelapse (des fichiers qui pourraient être possiblement mal numérotée, possiblement en désordre).
-  *Par exemple : `D:\Timelapse\ImagesSource`.*
-![image](./img/Pasted-image-20231119180318.png)
+* l'une que l'on peut nommer `dossier_source` qui contiendra un chemin vers le dossier où se trouvent les photos dont on veut faire le timelapse (des fichiers qui pourraient être possiblement mal numérotés, possiblement en désordre). \
+  *Par exemple : `D:\Timelapse\ImagesSource`.* \
+  ![image](./img/Pasted-image-20231119180318.png)<br /><br />
 
-* l'autre contiendra le chemin cible qui contiendra les images qui seront bien réordonnées/renommées.
+
+* l'autre que l'on peut nommer `dossier_source` qui contiendra le chemin cible où se trouveront les images qui seront bien réordonnées/renommées. \
   *Par exemple : `D:\Timelapse\ImagesDestination`.*
 
+:::{admonition} Assigner une chaîne de caractère à une variable
+:class: tip, dropdown
+Pour stocker une valeur dans une variable, on écrit dans l'ordre :
+* le nom de la variable qui va recevoir la valeur
+* l’opérateur `=`
+* ce que l'on veut stocker dans la variable
 
-## 2 · Supprimer le dossier cible (au cas où)
+*(voir support de cours [ici](./cours.md#assignation))*
+
+```python
+dossier_source = "D:/Timelapse/ImagesDestination"
+```
+:::
+
+## 2 · Préparation le dossier de destination des images
+
+Dans un premier temps, on va préparer le dossier qui contiendra les images copiées.
+
+### 2a · Supprimer le dossier cible (au cas où)
 
 Si le dossier de destination des copies d'images qu'on va faire **existe déjà**, on le **supprime**.
 Cela nous permettra de partir sur une base saine à chaque essaie d'exécution du script.
 
 :::{admonition} Vérification de l'existence d'un dossier ou fichier
 :class: tip, dropdown
+
 Pour **vérifier si un chemin existe**, on peut utiliser la fonction `exists`, présente dans le module `os.path`, qu'il faudra donc importer avant !
+
 ```python
 import os.path    # note: faire import os ça fonctionne aussi
 dossier_existe = os.path.exists("C:/CHEMIN/A/TESTER")
@@ -92,7 +117,7 @@ shutil.rmtree("C:/CHEMIN/A/SUPPRIMER")
 :::
 
 
-## 3 · Créer le dossier de destination
+### 2b · Créer le dossier de destination
 
 **Créer le dossier de destination** qui accueillera nos copies d'images toutes bien renommées.
 
@@ -107,7 +132,7 @@ os.makedirs("C:/CHEMIN/DU/DOSSIER/A/CREER")
 :::
 
 
-## 4 · Récupérer la liste des fichiers source
+## 3 · Récupérer la liste des fichiers source
 
 Il va maintenant falloir **récupérer la liste des images** se trouvant dans notre dossier source.
 
@@ -126,7 +151,7 @@ Exemple de valeur retournée par cette commande, pour un dossier contenant 6 pho
 :::
 
 
-## 5 · Copier et renommer les images au propre
+## 4 · Copier et renommer les images au propre
 
 Nous allons **copier** le contenu de notre dossier plein d'images dans le répertoire cible, en les **renommant** afin de normaliser leur nomenclature avec une numérotation par frame, commençant par la frame 1.
 
@@ -134,7 +159,7 @@ Nous allons **copier** le contenu de notre dossier plein d'images dans le réper
 
 Au moyen d'une boucle `for` et de la liste récupérée en [(2)](#2--supprimer-le-dossier-cible-au-cas-où), il faudra, pour chacun des fichiers image présent dans le dossier, écrire un bloc de code qui exécutera les 2 actions successives suivantes :
 
-### a) Générer un nouveau nom
+### 4a · Générer un nouveau nom
 
 Ce nom sera défini en fonction d'un compteur que l'on incrémentera de fichier en fichier, et qui ressemblera à :
 
@@ -179,13 +204,13 @@ print(nombre_en_string_avec_padding)  # Affichera "00023"
 :::
 
 
-### b) Copie du fichier
+### 4b · Copie du fichier
 
 Nous pouvons ensuite :
 
-* Créer une nouvelle variable avec le **chemin source complet** de l'image à copier, en concaténant le chemin présent dans la variable correspondante parmi celles créées en [(1)](#1--créer-2-variables-pour-les-chemins), avec le nom du fichier correspondant à l'itération en cours de [la boucle](#5--copier-et-renommer-les-images-au-propre) que nous sommes en train d'écrire.
+* Créer une nouvelle variable avec le **chemin source complet** de l'image à copier, en concaténant le chemin présent dans la variable correspondante parmi celles créées en [(1)](#1--créer-2-variables-pour-stocker-les-chemins-contenant-les-images), avec le nom du fichier correspondant à l'itération en cours de [la boucle](#5--copier-et-renommer-les-images-au-propre) que nous sommes en train d'écrire.
   
-* Créer une nouvelle variable avec le **chemin de destination complet** de notre image renommée, en concaténant le chemin présent dans la variable correspondante parmi celles créées en [(1)](#1--créer-2-variables-pour-les-chemins), avec le nouveau nom de fichier que vous avez généré à l'[étape précédente](#a-générer-un-nouveau-nom).
+* Créer une nouvelle variable avec le **chemin de destination complet** de notre image renommée, en concaténant le chemin présent dans la variable correspondante parmi celles créées en [(1)](#1--créer-2-variables-pour-stocker-les-chemins-contenant-les-images), avec le nouveau nom de fichier que vous avez généré à l'[étape précédente](#a-générer-un-nouveau-nom).
   
 * Effectuer la copie grâce à ces 2 chemins !
 
@@ -199,13 +224,14 @@ shutil.copyfile("C:/Chemin/Fichier/Source.png", "C:/Destination.png")
 ```
 :::
 
-## 6 · Encodage de la vidéo
+
+## 5 · Encodage de la vidéo
 
 Une fois qu'on a tous nos fichiers copiés et renommés comme il faut dans un répertoire à part, on peut encoder la vidéo !
-
 Pour cela on lancera `ffmpeg`, couteau suisse open source utilisable en ligne de commande et permettant de faire toutes les opérations imaginables sur des médias de tous types.
 
-### a) Préparation de la ligne de commande
+
+### 5a · Préparation de la ligne de commande
 
 Nous allons donc assembler une ligne de commande, qui contiendra un appel à `ffmpeg` avec une série de paramètres choisis pour notre usage, et que nous feront exécuter automatiquement par notre script.
 
@@ -215,7 +241,7 @@ La commande `ffmpeg` sera la suivante :
 ffmpeg -f image2 -framerate 25 -i "C:/CHEMIN/DES/IMAGES/COPIÉES/Timelapse_%04d.jpg" -c:v h264 "C:/CHEMIN/DU/TIMELAPSE/FINAL/Timelapse.mov"
 ```
 
-Il faudra donc utiliser la [concaténation](./cours.md#la-concaténation) afin de construire cette commande, en insérant le chemin où se trouvent les images renommées défini en [(1)](#1--créer-2-variables-pour-les-chemins), et en précisant le chemin complet de la vidéo de sortie.
+Il faudra donc utiliser la [concaténation](./cours.md#la-concaténation) afin de construire cette commande, en insérant le chemin où se trouvent les images renommées défini en [(1)](#1--créer-2-variables-pour-stocker-les-chemins-contenant-les-images), et en précisant le chemin complet de la vidéo de sortie.
 
 :::{note}
 Dissection de cette commande ffmpeg :
@@ -244,7 +270,7 @@ Vous noterez l'étrange `%04d` présent dans le nom de fichier d'entrée que l'o
 :::
 
 
-### b) Exécution de la ligne de commande
+### 5b · Exécution de la ligne de commande
 
 Nous pouvons à présent exécuter la ligne de commande que nous avons construite en [(6a)](#a-préparation-de-la-ligne-de-commande), en la passant en paramètre à la fonction `os.system()`.
 
