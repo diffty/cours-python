@@ -87,7 +87,7 @@ tl;dr:
 
 ### 2 · Lire et récupérer le contenu du fichier
 
-👉 Lire le fichier afin de stocker son contenu dans une variable grâce à la méthode `.read()` de l'objet pointeur de fichier que l'on a créé en [(1)](#1--ouvrir-le-fichier), retourné par l'appel à la fonction `open`.
+👉 Lire le fichier et stocker son contenu dans une variable que l'on pourra appeler  `contenu_du_fichier_brut`.
 
 :::{admonition} Lecture du contenu d'un fichier
 :class: tip, dropdown
@@ -119,7 +119,9 @@ Ce n'est pas _obligatoire_, mais il s'agit d'une bonne pratique de programmation
 
 ### 3 · Transformation du contenu récupéré en *liste*
 
-La valeur retournée par `.read()` en mode binaire est une valeur de type *bytearray*. Il s'agit littéralement d'un *tableau d'octets*, à savoir le contenu brut de notre fichier stocké octet par octet sous la forme d'une sorte de *liste*, et non interprété par Python.
+La valeur retournée par `.read()` en mode binaire, que l'on a stockée en [(2)](#2--lire-et-récupérer-le-contenu-du-fichier) dans la variable `contenu_du_fichier_brut`, est une valeur de type *bytearray*.
+
+Il s'agit littéralement d'un *tableau d'octets*, à savoir le contenu brut de notre fichier stocké octet par octet sous la forme d'une sorte de *liste*, et non interprété par Python.
 
 :::{admonition} Définition d'un octet
 :class: note, dropdown
@@ -137,9 +139,9 @@ Il va donc falloir que l'on [convertisse](./cours.md#casting) (ou *caste*) cette
 
 :::{admonition} Conversion ou *casting* d'une valeur
 :class: tip, dropdown
-Pour convertir la valeur d'une variable d'un type à l'autre, nous pouvons [caster](./cours.md#casting) notre variable de type `bytearray` afin de recopier les valeurs contenu de chacunes de ses cases dans une nouvelle variable `list`.
+Pour convertir la valeur d'une variable d'un type à l'autre, nous pouvons [caster](./cours.md#casting) notre variable de type `bytearray` afin de recopier les valeurs contenues dans chacune de ses cases dans une nouvelle *liste*.
 
-En Python, cela correspond à appeler une fonction correspondant au type de destination désiré, avec comme unique paramètre la variable ou la valeur à convertir.
+Pour faire cela en Python, cela correspond à appeler une fonction portant le nom du type de destination désiré, avec comme unique paramètre la variable ou la valeur à convertir.
 
 Ici, pour convertir une variable `contenu_du_fichier_brut` en *list*, on écrirait :
 
@@ -187,8 +189,9 @@ On va maintenant localiser une case aléatoire de notre tableau `contenu_du_fich
 
 👉 Tirez un numéro de case au hasard de votre tableau `contenu_du_fichier`.
 
-:::{tip}
-Le contenu de notre fichier étant maintenant stocké dans une liste, on peut donc connaitre la taille de cette liste avec la fonction `len()`, et choisir une case aléatoire en utilisant notre vieil ami `random.randint()` (voir le [TD2](./td02.md#1--crée-une-liste-et-remplis-là-de-100-nombres-aléatoires)).
+:::{admonition} Indice
+:class: tip, dropdown
+Le contenu de notre fichier étant maintenant stocké dans une liste, on peut donc connaitre la taille de cette liste grâce à la fonction `len()`, puis choisir une case aléatoire en utilisant notre vieil ami `random.randint()` (voir le [TD2](./td02.md#1--crée-une-liste-et-remplis-là-de-100-nombres-aléatoires)).
 :::
 
 #### b) Changement de la valeur de la case
@@ -206,14 +209,14 @@ Pour accéder à la case d'une liste, on écrit le numéro de case désiré entr
 tableau[3] = 68
 ```
 
-**Exemple 2** : lire le contenu de la case 0 (la toute première) de la liste `tableau` et stockage dans une variable
+**Exemple 2** : lire le contenu de la case 0 (la toute première) de la liste `tableau` et le stocker dans une variable
 ```python
 contenu_premiere_case = tableau[0]
 ```
 :::
 
 
-### 5 · Retransformation de la liste en *bytearray*
+### 5 · Conversion de la liste altérée en *bytearray*
 
 Maintenant que l'on a glissé cette petite valeur intruse et coquine en plein milieu de notre fichier, on va pouvoir écrire notre image corrompue afin de constater les résultats de la corruption.
 
@@ -249,7 +252,7 @@ Faites donc bien gaffe au chemin du fichier que vous mettez en paramètre du cou
 
 :::{admonition} Écriture dans un fichier
 :class: tip, dropdown
-Vous pouvez écrire dans un fichier **ouvert en mode écriture** en utilisant la méthode `.write()` de l'objet retourné par la fonction `open` ayant servi à ouvrir le fichier.
+Vous pouvez écrire dans un fichier **ouvert en mode écriture** en utilisant la méthode `.write()` de l'objet retourné par la fonction `open()` ayant servi à ouvrir le fichier.
 
 Cette méthode prend un unique paramètre correpondant aux données à inscrire dans le fichier.
 
@@ -278,7 +281,7 @@ Du coup... On va multiplier la destruction :<
 
 ### 1 · Répéter la corruption
 
-👉 Mettez toute la partie du code de la partie 2 qui injecte les mauvaises informations dans une boucle `for ... in range(...)`, afin de faire en sorte que ce code aille corrompre à répétition différents endroits aléatoires de notre fichier.
+👉 Mettez dans une boucle `for i in range(...)` toute la partie du code de la partie 2 *qui change une case du tableau*, afin que ces quelques lignes de code se répètent, allant corrompre à répétition de multiples endroits cases aléatoires de notre fichier.
 
 :::{tip}
 S'il y a toujours aussi peu de corruption alors que votre code se répète bel et bien, faites bien attention à ce que vous faites boucler ! Peut-être que trop choses ont été incluse dans le bloc de code.
@@ -298,14 +301,18 @@ Maintenant que l'on a une belle image glitchée, on peut très facilement en fai
 
 #### 2a · Boucle `for` pour générer plein d'images
 
-👉 Faites une nouvelle boucle `for i in range(...)` qui ENGLOBE l'ensemble de la boucle que vous avez défini en [(1a)](#1--répéter-la-corruption), et qui fera donc répéter **l'ensemble de l'opération de destruction de l'image, de l'ouverture du fichier original à l'écriture de l'image corrompue**.
+👉 Faites une nouvelle boucle `for i in range(...)` qui ENGLOBERA L'ENSEMBLE de la boucle que vous avez défini en [(1a)](#1--répéter-la-corruption).
 
-Le but de cette boucle sera de générer un certain nombre de versions glitchées de notre fichier image originale. Ce n'est pas grave si dans un premier temps, elle écrase toujours le même fichier image, on verra comment nommer nos différentes frames dans la partie suivante.
+Cette boucle fera répéter, pour autant de fois que vous souhaitez générer d'images glitchées différentes (nombre de fois qui sera la valeur à mettre dans votre `range(  )`) : **l'ensemble de l'opération de destruction de l'image, de l'ouverture du fichier original jusqu'à l'écriture de l'image corrompue**.
+
+Le but de cette boucle sera de générer un certain nombre de versions glitchées de notre fichier image originale. Ce n'est pas grave si, dans un premier temps, elle écrase toujours le même fichier image.
+
+On verra comment nommer nos différentes frames dans la partie suivante.
 
 
 #### 2b · Générer un nom unique et numéroté pour chaque frame à générer
 
-Chacune de ces images sera numérotée avec un numéro d'image *padded*.
+Chacune de ces images sera numérotée avec un numéro d'image dit "*padded*".
 
 :::{admonition} C'est quoi le padding?
 :class: note
@@ -315,9 +322,9 @@ Chacune de ces images sera numérotée avec un numéro d'image *padded*.
 Dans le cas présent, on va vouloir ajouter autant de `0` qu'il faudra, à gauche de notre nombre, afin d'avoir toujours au moins 3 chiffres dans notre chaîne de caractères.
 
 Par exemple :
-* `4`-> `004`
-* `23`-> `023`
-* `420`-> `420`
+* `4` -> `004`
+* `23` -> `023`
+* `420` -> `420`
 :::
 
 
@@ -326,21 +333,21 @@ Ces noms seront définis en fonction d'un compteur que l'on incrémentera de fic
 * `Glitch_001.jpg` pour le premier fichier de la liste
 * `Glitch_002.jpg` pour le deuxième, etc...
 
-👉 Pour cela, nous allons **créer une nouvelle variable**, dans laquelle nous concaténerons :
+👉 Pour cela, nous allons **créer une nouvelle variable**, dans laquelle nous [concaténerons](./cours.md#la-concaténation) :
 * le préfixe de notre fichier (`"Glitch_"`)
 * le numéro de frame avec padding (voir ci-dessous) (`001`, `002`...)
 * l'extension (`.JPG` donc).
 
 :::{admonition} Padding d'une chaine de caractère (aka "faire une belle numérotation")
 :class: tip, dropdown
-Pour obtenir un nombre avec un "**padding**", on utilisera la méthode `.zfill()`, directement intégrée aux valeurs de type chaine de caractères.
+Pour obtenir un nombre avec un "**padding**", on utilisera la méthode `.zfill()`, une fonction directement intégrée aux valeurs de type chaine de caractères.
 
 ```python
 str(9).zfill(3) # Ceci renverra -> 009 :)
 ```
 
 Petite explication sur cette ligne :
-* on convertit le nombre `9` au format chaine de caractère (*string*),
+* on convertit le nombre `9` au format chaine de caractères (*string*),
 * puis on utilise la méthode `zfill` intégrée au type `string` pour ajouter le nombre de `0` devant le nombre pour que la taille de la chaine de caractères finale corresponde AU MOINS à la valeur renseignée en paramètres de `zfill`.
 * cette méthode est disponible sur chaque variable de type chaîne de caractère. Par exemple : `"9".zfill(3)` c'est valide
 
@@ -380,33 +387,37 @@ On va donc vérifier, après l'écriture de chaque image, que celle-ci est bel e
 from PIL import Image
 
 def isImageValid(path):
-	try:
-		imageFile = Image.open(path)
-		imageFile.save(path)
-		return True
-	
-	except:
-		return False
+    try:
+        imageFile = Image.open(path)
+        imageFile.save(path)
+        return True
+    
+    except:
+        return False
 ```
   
 Cette fonction prend le chemin d'une image en paramètre, et retourne `True` si l'image est valide et `False` sinon.
 
-Elle tente d'ouvrir l'image avec la librairie de manipulation d'image PIL, qui crashera à la sauvegarde (car c'est le moment où la libraire essaie de décoder l'image) si elle n'est pas valide.
-Le crash est attrapé par l'instruction de gestion d'erreur `try ... catch` (que nous n'avons pas encore abordé), qui fera en sorte que la fonction retourne `False` si un tel évènement se produisait.
+:::{note}
+`isImageValid` tente d'ouvrir l'image avec la librairie de manipulation d'image PIL, qui crashera à la sauvegarde (car c'est le moment où la libraire essaie de décoder l'image) si elle n'est pas valide.
 
-Oui, c'est un peu bourrin. Mais ça fonctionne à tous les coups.
+Le crash est "attrapé", """supprimé""" par l'instruction de gestion d'erreur `try ... catch` (que nous n'avons pas encore abordé), et qui fera en sorte que la fonction retourne `False` si un tel évènement se produisait.
+:::
+
+Oui, c'est un peu bourrin. Mais ça fonctionne à tous les coups. Faites moi confiance :>
 
 #### 3c · Recommencer la génération si l'image est invalide
 
-Utilisez la fonction `isImageValid()` afin de vérifier si l'image que l'on vient de générer est valide.
-
-Si ce n'est pas le cas, c'est-à-dire si la fonction renvoie `False`, alors on regénérera un nouveau fichier glitché, jusqu'à ce que la frame soit lisible.
+👉 Faites une boucle [`while`](./cours.md#boucle-while) qui répètera **le code de génération d'une seule image** jusqu'à ce que cette image soit valide.
 
 :::{admonition} INDICE
 :class: tip, dropdown
-L'utilisation d'une boucle `while` prendra tout son sens pour régler cette problématique !
 
-En effet, on souhaite ici qu'un bloc de code (ici la partie du programme générant une frame en particulier) s'exécute jusqu'à ce qu'une condition soit remplie (la validité d'une image).
+Pour cela, vous pouvez utiliser la fonction `isImageValid()` dans votre condition de fin de boucle, afin de vérifier si l'image que l'on vient de générer est valide. Si ce n'est pas le cas, c'est-à-dire si la fonction renvoie `False`, alors on regénérera un nouveau fichier glitché, jusqu'à ce que la frame soit lisible.
+
+L'utilisation d'une boucle [`while`](./cours.md#boucle-while) prendra tout son sens pour régler cette problématique !
+
+En effet, on souhaite ici qu'un bloc de code (ici, la partie du programme générant une unique frame en particulier) s'exécute jusqu'à ce qu'une condition soit remplie (la validité d'une image).
 
 Ce qui décrit parfaitement une problématique à laquelle peut répondre une boucle `while` :)
 :::
@@ -414,5 +425,99 @@ Ce qui décrit parfaitement une problématique à laquelle peut répondre une bo
 
 ### 4 · Encoder la séquence d'image en vidéo
 
-Une fois la séquence d'images générée, encodez-là en MP4 avec `ffmpeg` !
-De nouveau, n'hésitez pas à consulter le [[TD3#6 · Encodage de la vidéo|TD sur le timelapse]] pour cette étape.
+C'EST LA DERNIERE PARTIE, PROMIS.
+
+Une fois qu'on dispose de tous nos fichiers copiés et renommés comme il faut dans un répertoire à part, on peut encoder la vidéo !
+
+Pour cela, on lancera `ffmpeg`, couteau suisse open source utilisable en ligne de commande et permettant de faire toutes les opérations imaginables sur des médias de tous types.
+
+
+#### 4a · Installer `ffmpeg` sur votre machine
+
+Pour cela, 2 solutions :
+
+##### SOLUTION 1 : Avec `winget`
+
+Si *winget* est installé et fonctionnel sur votre machine, vous aurez juste à taper ceci dans une *Invite de commande* (Win+R > `cmd` > ENTRÉE) :
+
+```bash
+winget install ffmpeg
+```
+
+Si besoin, valider les prompts (acceptation de licence, etc) en pressant la touche `Y` puis ENTRÉE.
+
+
+##### SOLUTION 2 : Manuellement
+
+* Télécharger la dernière build en récupérant le fichier `ffmpeg-git-full.7z` depuis cette page : https://www.gyan.dev/ffmpeg/builds/
+
+* La décompresser quelque part (`C:\ffmpeg` par exemple)
+
+  ![image](./img/Pasted-image-20231119170816.png)
+
+* Ouvrez le menu Démarrer puis tapez `env`, avant de choisir l'option **Modifiez les Variables d'environnement**
+
+  ![image](./img/Pasted-image-20231119170906.png)
+
+* Ajoutez le chemin complet vers `ffmpeg.exe` (qui devrait se trouver dans le sous-dossier `bin`) à la liste de chemins de la variable d'environnement PATH
+
+  ![image](./img/Pasted-image-20231119171658.png)
+
+Dans les 2 cas, `ffmpeg` devrait à présent être accessible peu importe où vous vous trouverez dans votre invite de commande !
+
+  ![image](./img/Pasted-image-20231119172123.png)
+
+
+#### 4b · Préparation de la ligne de commande
+
+Nous allons donc assembler une ligne de commande, qui contiendra un appel à `ffmpeg` avec une série de paramètres choisis pour notre usage, et que nous feront exécuter automatiquement par notre script.
+
+La commande `ffmpeg` sera la suivante :
+
+```bash
+ffmpeg -f image2 -framerate 25 -i "C:/CHEMIN/DES/IMAGES/GENEREES/Glitch_%04d.jpg" -c:v h264 "C:/CHEMIN/DE/LA/VIDEO/FINALE/Glitch.mp4"
+```
+
+👉 Utiliser la [concaténation](./cours.md#la-concaténation) afin de construire cette commande et la stocker dans une variable, en insérant le chemin où se trouvent les images générées, et en précisant le chemin complet de la vidéo de sortie.
+
+:::{note}
+Dissection de cette commande ffmpeg :
+
+* `ffmpeg`
+  nom du programme à lancer (duh)
+  
+* `-f image2`
+  format d'entrée (ici, `image2` correspond à une séquence d'image)
+  
+* `-framerate 25`
+  framerate souhaité pour notre vidéo de sortie
+  
+* `-i "C:/CHEMIN/DES/IMAGES/GENEREES/Glitch_%04d.jpg"`
+  chemin vers la séquence d'images d'entrée, à transformer en vidéo
+  
+* `-c:v h264`
+  codec de la vidéo de sortie
+  
+* `"C:/CHEMIN/DE/LA/VIDEO/FINALE/Glitch.mp4"`
+  chemin de la vidéo de sortie qu'on va encoder
+:::
+
+:::{note}
+Vous noterez l'étrange `%04d` présent dans le nom de fichier d'entrée que l'on passe à `ffmpeg`. Il s'agit de lui préciser que le fichier média d'entrée avec lequel il devra travailler est une séquence d'image, et le `%04d` indique l'endroit où se trouve le numéro de frame de chaque image dans leur nomenclature, informant au passage que ce nombre est écrit complété avec 4 zéros :) (voir la partie sur le [padding/zfill](#2b--générer-un-nom-unique-et-numéroté-pour-chaque-frame-à-générer))
+:::
+
+
+#### 4c · Exécution de la ligne de commande
+
+Nous pouvons à présent exécuter la ligne de commande que nous avons construite en [(4b)](#4b--préparation-de-la-ligne-de-commande), en la passant en paramètre à la fonction `os.system()`.
+
+:::{admonition} Lancer une commande/un programme
+:class: tip, dropdown
+Pour lancer une commande automatiquement, on peut utiliser la fonction `system` présente dans le module `os`.
+
+La ligne de commande sera exécutée comme si on la tapait à la main dans une Invite de Commande `cmd.exe` !
+
+```python
+os.system(la_commande_a_executer)
+```
+:::

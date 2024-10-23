@@ -46,6 +46,8 @@ temperature_celsius = obtenir_temperature_paris()
 temperature_fahrenheit = (temperature_celsius * 9 / 5) + 32
 ```
 
+---
+
 ## Valeur
 Une valeur est une information, qui peut être contenue dans une [variable](#variable) et qui peut être utilisée dans une opération impliquant d'autres valeurs permettant d'obtenir un résultat.
 
@@ -71,7 +73,7 @@ Il peut s'agir de n'importe quelle information manipulable en langage Python :
 
 * ...
 
-
+---
 
 ## Assignation
 L'opération d'assignation consiste à stocker une [valeur](#valeur) dans une [variable](#variable).
@@ -84,7 +86,7 @@ La syntaxe est la suivante : le nom de la variable qui va recevoir la valeur (ou
 nom_variable = 34
 ```
 
-
+---
 
 ## Indentation
 Une ligne de code indentée est une ligne de code décalée sur la droite, par une espaces ou une tabulation (de préférence 4 espaces)
@@ -92,6 +94,8 @@ Une ligne de code indentée est une ligne de code décalée sur la droite, par u
 En Python, l'indentation d'une série de ligne de code indique qu'elle appartiennent à un même [bloc de code](#bloc-de-code).
 
 ![image](./img/indentation.png)
+
+---
 
 ## Bloc de code
 Un bloc de code est une série de lignes de code [indentés](#indentation), et dont la ligne précédente finit la plupart du temps (pour ne pas dire toujours) par deux points `:`
@@ -104,6 +108,8 @@ Les blocs peuvent être imbriqués les uns dans les autres.
 
 **NB**: Il s'agit de l'équivalent en C++/C# du code que l'on peut trouver entre `{ }`
 
+---
+
 ## Commentaires
 Du texte contenu dans le code, totalement ignoré par l'interpréteur/compilateur.
 
@@ -111,7 +117,7 @@ Commence par un dièse (`#`) et peut contenir absolument n'importe quoi.
 
 Ils servent à expliquer ce qu'on fait à quiconque relit ton code, ou à soi-même pour s'y retrouver. Plus rarement (ou pas?) à raconter des blagues ou passer faire des remarques salées sur la qualité du travail des collègues.
 
-##### Exemple
+### Exemple
 ```python
 # Je crée cette variable
 cette_variable = 65
@@ -123,10 +129,12 @@ cette_variable = cette_variable + 4  # (j'ai choisi 4 car c'est un joli chiffre)
 print(cette_variable)
 ```
 
+---
+
 ## Expression
 Une expression est une formule combinant valeurs et/ou variables et [opérateurs](#operateurs). Elles servent par exemple à transformer des informations d'une forme à une autre, combiner plusieurs informations ensemble pour obtenir un résultat, ou bien formuler un test qui permettra de définir si une [condition](#condition) exécutera son [bloc de code](#bloc-de-code) ou non.
 
-##### Exemple 1
+### Exemple 1
 ```python
 username == "f.clement"
 ```
@@ -147,7 +155,7 @@ else:
 
 (on aurait pu bien entendu écrire directement `if os.getlogin() == "f.clement":`, comme vous vous en doutez possiblement)
 
-##### Exemple 2
+### Exemple 2
 ```python
 import datetime
 
@@ -162,6 +170,8 @@ else:
 Cet exemple va récupérer l'heure en cours, puis, au moyen d'une expression, va vérifier si le nombre d'heures en cours est supérieur ou égal à 17 et si le nombre de minutes est plus grand que 30.
 
 Cette expression sera donc vraie si les 2 conditions sont réunies, et l'affichage sera différent si l'heure 17h30 est dépassée ou non.
+
+---
 
 ## Opérateurs
 Ce sont des symboles permettant de combiner des [valeurs](#valeur) entre elles, suivant des opérations qui leur sont propres.
@@ -271,6 +281,8 @@ Les trucs genre `AND` *(= et)* et `OR` *(= ou)*.
 
 *(à continuer d'écrire parce que dsl j'ai la flemme là)*
 
+---
+
 ## Chaîne de caractères
 Une chaine de caractère est un type de [variable](#variable) représentant basiquement un texte, à savoir techniquement un enchaînement de caractères alphanumériques, de caractères spéciaux, etc.
 
@@ -279,13 +291,45 @@ D'où son nom.
 ### La concaténation
 Il s'agit de combiner plusieurs chaînes de caractères en une seule. Tel une addition arithmétique, on utilise pour cette opération l'opérateur `+`.
 
-##### Exemple
+#### Exemple
 ```python
 prenom = "Freddy"
 phrase_bienvenue = "Bonjour, " + prenom + " ! Comment vas-tu?"
 ```
 
 La variable `phrase_bienvenue` contiendra `Bonjour, Freddy ! Comment vas-tu?`
+
+:::{admonition} Concaténer du texte avec des nombres
+:class: warning
+
+Attention cependant, si vous essayez de combiner chaînes de caractères avec des nombres, par exemple avec ce genre de code :
+
+```python
+mon_age = 30
+phrase_avec_mon_age = "J'ai " + mon_age + " ans"
+```
+
+Python vous enverra bouler avec l'une des erreurs suivantes :
+```
+TypeError: can only concatenate str (not "int") to str
+```
+ou
+```
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+```
+
+Il est en effet impossible de concaténer tel quel un nombre avec une chaîne de caractère, car ce sont des **types de données différents**.
+
+Il faudra auparavant convertir vos variables nombre en chaînes de caractère afin de n'avoir plus QUE des chaînes de caractères à concaténer.
+
+```python
+mon_age = 30
+phrase_avec_mon_age = "J'ai " + str(mon_age) + " ans"
+```
+
+Vous pourrez trouver quelques infos supplémentaires à la partie portant sur le [casting/les conversions](#casting).
+:::
+
 
 ### Accéder à un caractère en particulier
 Ce type de données partage quelques particularités avec les [listes](#listes), en particularité la particularité de pouvoir accéder à chacun de ces caractères indépendamment en utilisant la même syntaxe que l'on utilise pour accéder à la case d'une liste : en inscrivant le nom de la variable (ou directement la valeur), immédiatement suivie mettant le numéro du caractère entre crochets [ ].
@@ -298,6 +342,8 @@ la_lettre_qui_est_s = un_texte[6]
 ```
 
 La variable `la_premiere_lettre` contiendra `C`, tandis que la variable `la_lettre_qui_est_s` contiendra la valeur `s`.
+
+---
 
 ## Listes
 C'est un type de [valeur](#valeur), qui permet de stocker une série de valeurs dans la même [variable](#variable), et qu'on peut appeler également, en Python, **tableaux** ou **arrays**.
@@ -318,7 +364,7 @@ ma_liste_trop_stylee = [1, 4, "Chevale", 3.4, "Ah bon"]
 En Python et contrairement à de nombreux autres langages (ceux que l'on dit "typés" notamment) : chaque case peut avoir un type différent.
 :::
 
-### Accéder à un caractère en particulier
+### Accéder à une case de la liste
 
 Chaque case d'une liste est comme une variable à laquelle on peut accéder en ajoutant son numéro de case entre crochets `[]` juste après le nom de la variable désignant la liste : par exemple pour manipuler la case n°`3` de `ma_liste`, on écrit `ma_liste[3]`
 
@@ -366,6 +412,8 @@ nombres_cools.extend([86, 98])
 
 * Le reste se trouve dans la [documentation](https://docs.python.org/fr/3/tutorial/datastructures.html).
 
+---
+
 ## Condition
 La condition sert à exécuter un [bloc de code](#bloc-de-code) particulier si et seulement si le test attaché à la condition est vrai.
 
@@ -386,6 +434,8 @@ else:
 ```
 
 Quelques exemples de conditions un peu (un peu) moins idiots sont trouvables dans la partie sur les [expressions](#expression).
+
+---
 
 ## Boucles 
 Une boucle permet d'exécuter un [bloc de code](#bloc-de-code) plusieurs fois.
@@ -563,6 +613,8 @@ while len(phrase) < 100:
 ```
 Cet exemple ajoutera des mots aléatoires à une phrase jusqu'à ce que celle-ci dépasse la taille de 100 caractères.
 
+---
+
 ## Fonction
 Une fonction est un [bloc de code](#bloc-de-code) possédant un nom (tel une [variable](#variable)), disposant de paramètres d'entrée et pouvant retourner une valeur, et pouvant être appelé à tout moment dans le programme afin d'exécuter à volonté le bloc de code associé.
 
@@ -654,6 +706,8 @@ def telecharger_photo_chien(nom_fichier_destination):
     return nom_complet_fichier_destination
 ```
 
+---
+
 ## Dictionnaires
 C'est un type de [valeur](#valeur), similaire à une [liste](#listes), à la différence prêt que les cases ne sont pas numérotées mais **nommées** au moyen de noms/étiquettes uniques qu'on appelle **clé** (ou **key**).
 
@@ -678,6 +732,8 @@ numero_telephone = repertoire["Freddy"]
 
 Ici, la variable numero_telephone contiendra donc la [chaîne de caractères](#chaîne-de-caractères) `06 12 23 34 45`.
 
+---
+
 ## Casting
 Le casting correspond à l'action de **convertir** une [valeur](#valeur) d'un type à un autre.
 
@@ -700,7 +756,10 @@ nombre_entier_en_vrais_chiffres = int(nombre_en_texte)
 
 Dans tous les cas, il suffit généralement simplement d'utiliser le nom du type comme une fonction, avec la valeur ou la variable à "caster" en unique paramètre de cette fonction.
 
+---
+
 ## Classes & Objets
+
 ### Objet
 Une sorte de super variable pouvant encapsuler des [attributs](#les-attributs) (équivaut à des variables) et [méthodes](#les-méthodes) (équivaut à des fonctions).
 
@@ -814,6 +873,8 @@ La lumière pour le mood du matin est orange
 ```
 
 `light_midi` ayant pour couleur `blanc`, puisqu'étant la valeur définie dans le constructeur `__init__` et que nous n'avons pas modifiée par la suite.
+
+---
 
 ## Modules & Imports
 Les **modules**, ou **librairies**, ou **bibliothèques**, sont des banques de code préécrites permettant de se simplifier la tâche en mettant à disposition des fonctionnalités pré-programmées à votre programme, sans que vous n'ayez besoin de la réaliser vous-même.
