@@ -89,9 +89,9 @@ Cette ligne permet d'aller "piocher" dans le module `PIL`, et d'y sortir l'objet
 :::{note}
 Cette méthode s'apparente énormément à la fonction `open()`, intégrée à Python, et que nous connaissons plutôt bien puisque nous l'avons utilisé lors des précédents TP.
 
-Cependant, ces deux outils n'ont **rien à voir entre eux** et ne partage que leur nom, leur fonctionnement leur étant propre ;
+Cependant, ces deux outils n'ont **rien à voir entre eux** et ne partagent que leur nom, leur fonctionnement leur étant propre.
 
-par exemple, pour `Image.open()`, seul le chemin vers l'image à ouvrir sera nécessaire, **pas besoin** de spécifier un mode d'ouverture (les `'r'`, `'w'`, `'rb'`, `'wb'`...).
+Par exemple, pour `Image.open()`, seul le chemin vers l'image à ouvrir sera nécessaire, **pas besoin** de spécifier un mode d'ouverture (les `'r'`, `'w'`, `'rb'`, `'wb'`...).
 :::
 
 :::{admonition} Ouvrir une image avec `pillow`
@@ -134,11 +134,11 @@ Afin de nous faciliter la vie lors de la lecture des valeurs de pixels un peu pl
 Pour cela, nous pouvons utiliser la méthode [`.convert()`](https://pillow.readthedocs.io/en/stable/reference/Image.html#PIL.Image.Image.convert) intégrée à notre objet `mon_image` (qui est, pour rappel, de type [`Image`](https://pillow.readthedocs.io/en/stable/reference/Image.html)).
 
 Cette méthode :
-* Prend comme paramètre le mode de conversion que l'on désire, par exemple `"RGB"` pour les images en couleur, `"RGBA"` pour les images en couleur avec alpha, ou `"L"` pour les images en nuances de gris.
+* Prend comme **paramètre** le mode de conversion que l'on désire, par exemple `"RGB"` pour les images **en couleur**, `"RGBA"` pour les images **en couleur avec alpha**, ou `"L"` pour les images **en nuances de gris**.
   
   C'est ce dernier mode `"L"` qui va nous intéresser ici !
 
-* Retourne une copie de l'image qui a subit la conversion que l'on a demandé.
+* **Retourne** une copie de l'image qui a subit la conversion que l'on a demandé.
 
 :::{admonition} **🚨 ATTENTION 🚨**
 :class: warning
@@ -191,9 +191,11 @@ Et c'est la partie tricky du TD.
 
 👉 Il s'agira ici de créer 2 boucles **imbriquées**, qui permettront de parcourir l'ensemble des pixels de l'image, du coin supérieur gauche de l'image à son coin inférieur droit.
 
-Pour cela, nous utiliserons une première boucle, qui se **répétera autant de fois qu'il y a de pixels en hauteur de l'image**. Et ce afin de la parcourir **ligne de pixels par ligne de pixels**. Nous utiliserons donc une boucle de type `for y in range(...)`, en utilisant la **variable contenant la hauteur de l'image** récupérée en [(6)](#6--récupération-des-dimensions-de-limage) comme paramètre du `range(  )`.
+Pour cela, nous utiliserons une première boucle, qui se **répétera autant de fois qu'il y a de pixels en hauteur de l'image**. Et ce afin de la parcourir **ligne de pixels** par **ligne de pixels**.
 
-Ensuite, la seconde boucle, de nouveau de type `for x in range(...)`, sera à écrire **à l'intérieur** de la première (d'où l'**imbrication**), et elle se répétera autant de fois qu'il y a de pixels en largeur de l'image. Cette seconde boucle permettra ainsi de parcourir notre image de **gauche à droite**, et ce pour chaque ligne.
+Nous utiliserons donc une boucle de type `for y in range(...)`, en utilisant la **variable contenant la hauteur de l'image** récupérée en [(6)](#6--récupération-des-dimensions-de-limage) comme paramètre du `range(  )`.
+
+Ensuite, la seconde boucle, de nouveau de type `for x in range(...)`, sera à écrire **à l'intérieur** de la première (d'où l'**imbrication**), et se répétera autant de fois qu'il y a de pixels en largeur de l'image. Cette seconde boucle permettra ainsi de parcourir notre image de **gauche à droite**, et ce pour chaque ligne.
 
 Ainsi, nous obtiendrons un bout de code qui répètera un bloc de code s'exécutant pour chaque pixel, de gauche à droite, de chaque ligne, de haut en bas.
 
@@ -202,9 +204,9 @@ Ainsi, nous obtiendrons un bout de code qui répètera un bloc de code s'exécut
 
 ## 8 · Lire le contenu de chaque pixel de l'image
 
-Dans le bloc de code de cette double boucle imbriquée, nous obtenons 2 variables utilisables : `x` et `y` ! Ces deux variables correspondent aux coordonnées de chaque pixel de notre image, parcouru par la double boucle.
+Dans le bloc de code de cette double boucle imbriquée, nous avons à notre disposition 2 variables utilisables : `x` et `y` ! Ces deux variables correspondent aux coordonnées de chaque pixel de notre image, parcourus par la double boucle.
 
-Nous allons pouvoir utiliser ces coordonnées pour récupérer la couleur (enfin, ici le niveau de gris) chaque pixel que nous allons convertir en ASCII.
+Nous allons pouvoir utiliser ces coordonnées pour récupérer la couleur (enfin, ici, le niveau de gris) de chaque pixel que nous allons convertir en ASCII.
 
 Pour cela, nous utiliserons la méthode `.getpixel()`, qui :
 * prend en unique **paramètre** une liste à 2 cases correspondant à chacune des coordonnées du pixel : `[x, y]`,
@@ -307,14 +309,14 @@ C'est un début, mais il manque quelque chose.
 
 ## 12 · Retour à la ligne
 
-En effet, toutes les lignes se succède SANS retour à la ligne !
+En effet, toutes les lignes se succèdent SANS retour à la ligne !
 
-👉 À la fin de la boucle itérant sur **chaque ligne** (c'est à dire, **après** que tous les pixels de la ligne ait été parcourus), faites un retour à la ligne.
+👉 À la fin de la boucle itérant sur **chaque ligne** (c'est à dire, **après** que tous les pixels de la ligne aient été parcourus), faites un retour à la ligne.
 
 :::{admonition} "Afficher" un retour à la ligne
 :class: tip
 2 solutions :
-* Utilisez le caractère spécial `\n` qui représente un **retour à la ligne** et sera automatiquement "transformé" en tant que tel
+* Utilisez, dans un `print()`, le caractère spécial `\n`, qui représente un **retour à la ligne** et qui sera automatiquement "transformé" en tant que tel
 * Faites juste un `print()`. Ca n'affichera rien, mais ça entrainera un retour à la ligne dès le prochain `print` quel qu'il soit.
 :::
 
@@ -344,7 +346,7 @@ En effet, toutes les lignes se succède SANS retour à la ligne !
     ▒▒▒░░                     
 </pre>
 
-Voilà est mieux !
+Voilà qui est mieux !
 
 
 ## 13 · Si vous êtes arrivé·e jusque là
@@ -353,7 +355,9 @@ Déjà, bravo ! 🎉
 
 Ensuite, vous pouvez :
 
-* Ajouter un redimensionnement de l'image d'entrée **dès son ouverture** afin de rapetisser et contrôler sa taille, peu importe l'image que vous choissez (utilisez la méthode `.resize([nouvelle_largeur, nouvelle_hauteur])` de l'objet `Image`)
+* Ajouter un redimensionnement de l'image d'entrée **dès son ouverture** afin de rapetisser et contrôler sa taille, peu importe l'image que vous choissez (utilisez la méthode `.resize([nouvelle_largeur, nouvelle_hauteur])` de votre objet de type `Image` que vous souhaitez redimensionner.
+  
+  Tout comme `.convert()`, cette méthode `.resize()` renverra un nouvel objet de type `Image` qu'il faudra récupérer dans une variable)
 
 * (et c'est encore mieux si vous respectez le ratio de l'image durant le redimensionnement.....)
 
