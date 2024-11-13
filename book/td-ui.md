@@ -124,7 +124,7 @@ Cette ligne doit toujours se trouver A LA FIN du programme.
 :::
 
 :::{admonition} Que fait `exec()` ?
-:class: info, dropdown
+:class: info
 
 Cette méthode démarre la boucle d'événements de notre programme : une boucle infinie qui va bloquer l'exécution de la suite du programme mais qui va se charger de récupérer en permanence les évènements, interactions avec l'utilisateur, l'interface et l'OS, changements d'états du programme, etc.
 :::
@@ -134,9 +134,14 @@ Cette méthode démarre la boucle d'événements de notre programme : une boucle
 
 ## Partie 2
 
+Après cette introduction, nous allons assembler notre interface pièce par pièce, éléments dont nous définirons le comportement en les connectant à de petites fonctions.
+
+Mettez de côté le "Hello World" de la partie 1 et repartez d'un nouveau fichier `.py` !
+
+
 ### 1 · Dessin de l'interface
 
-On va faire une interface pour notre image à convertir et afficher le résultat dans une zone de texte !
+On va faire une interface pour notre convertisseur d'images en ASCII, et afficher le résultat dans une zone de texte !
 
 Notre interface ressemblera grossièrement à ceci :
 
@@ -151,11 +156,11 @@ Les différents éléments de notre interface sont :
 * un widget **QLabel** : affiche un simple texte, **non éditable** par l'utilisateurice, permettant de transmettre des informations.
 * un widget **QLineEdit** : un champ de texte, **éditable** par l'utilisateurice. Permet de récupérer des informations de sa part.
 * un widget **QPushButton** : un bouton. Permet d'effectuer une ou plusieurs actions lorsque l'utilisateurice clique dessus.
-* un widget **QTextEdit** : un champ de texte multiligne, **éditable** par l'utilisateurice. Peut recevoir du texte formatté avec différents styls d'écriture. Assez simple pour afficher un texte brut (comme on va faire ici), mais assez puissant pour créer un petit logiciel de traitement de texte complet.
+* un widget **QTextEdit** : un champ de texte multiligne, **éditable** par l'utilisateurice. Peut recevoir du texte formatté avec différents styles d'écriture. Assez simple pour afficher un texte brut (comme on va faire ici), mais assez puissant pour créer un petit logiciel de traitement de texte complet.
 
 Ces éléments sont disposés dans l'interface grâce à des **layouts**, qui contiennent autant de *widgets* qu'on le souhaite, et qui se chargent de les disposer d'une façon particulière dans l'espace de notre fenêtre d'application.
 
-Ici, nous pouvons voir que les éléments de notre brouillon d'interface sont disposés à la verticale. Nous pourrons donc utiliser un *layout* empilant les éléments de manière verticale, appelé `QVBoxLayout`.
+Ici, nous pouvons voir que les éléments de notre brouillon d'interface sont disposés **à la verticale**. Nous pourrons donc utiliser un *layout* empilant les éléments de manière verticale, appelé `QVBoxLayout`.
 
 Chaque *layout* possède un comportement de placement différent : en colonne, en ligne, en grille... `QVBoxLayout` correspond à celui qui place les *widgets* dans une colonne, les uns au-dessus des autres. (V = Vertical)
 
@@ -168,10 +173,14 @@ De la même façon, `QHBoxLayout` permetterait, lui, de placer les widgets les u
 
 👉 Importez les classes `QWidget`, `QLineEdit`, `QPushButton` et `QVBoxLayout` depuis le module `PySide2.QtWidgets`.
 
+(voir [Partie 1-3a](#3a-importer-qapplication-et-qlabel))
+
 
 #### 1b) Créer l'application
 
-👉 Instanciez `QApplication` de la même façon qu'à la [partie 1b](#b-instancier-un-objet-qapplication).
+👉 Instanciez `QApplication` et stockez l'objet instancié dans une variable `app`.
+
+(voir [Partie 1-3b](#b-instancier-un-objet-qapplication))
 
 :::{note}
 N'oubliez pas d'appeler la méthode `.exec()` de votre instance en **toute fin de programme** comme en [partie 1d](#d-exécuter-linterface-graphique) !
@@ -184,7 +193,7 @@ N'oubliez pas d'appeler la méthode `.exec()` de votre instance en **toute fin d
 
 #### 1c) Le layout
 
-👉 Créez un objet layout de classe `QVBoxLayout`.
+👉 Créez un objet *layout* de classe `QVBoxLayout`.
 
 :::{admonition} Instancier un objet d'une classe de layout
 :class: tip, dropdown
@@ -196,9 +205,22 @@ layout = QVBoxLayout()
 
 #### 1d) Créer un QWidget principal
 
-Le *widget* principal d'une application (un peu comme le `QLabel` de la [partie 1](#3c-créer-un-widget-qlabel)) doit forcément être de type `QWidget` pour prendre cette place d'élément principal de l'interface, élément duquel toute la disposition de notre interface va découler. Un layout ne peut pas avoir ce rôle, mais ce n'est pas grave, car nous pouvons en embarquer un dans un widget vide !
+Une application créée avec PySide fonctionne selon le principe d'une hiérarchie de *widgets* imbriqués, parentés les uns aux autres. L'application aura donc tout en haut de sa hiérarchie un *widget principal*, dans lesquels nous imbriquerons tous les autres.
 
-👉 Nous allons donc devoir créer un `QWidget` principal, qui créera la fenêtre, et dans lequel nous imbriquerons un *layout* `QHBoxLayout` qui y accueillira nos éléments d'interface.
+Le *widget* principal d'une application (un peu comme le `QLabel` de la [partie 1](#3c-créer-un-widget-qlabel)) doit forcément être de type `QWidget` pour prendre cette place d'élément principal de l'interface, élément duquel toute la disposition de notre interface va découler. Un *layout* ne peut pas avoir ce rôle, mais ce n'est pas grave, car nous pouvons assigner un *layout* à un *widget* de base afin de le remplir de *widgets* !
+
+La hiérarchie de notre fenêtre sera définie comme ceci :
+```
+QDialog (la fenêtre)
+└─ QWidget (le principal)
+   └─ QVBoxLayout (le layout attaché au widget principal)
+      ├─ QLabel
+      ├─ QLineEdit
+      ├─ QPushButton
+      └─ QTextEdit 
+```
+
+👉 Nous allons donc devoir créer un `QWidget` principal, qui créera la fenêtre, et dans lequel nous assignerons un *layout* `QHBoxLayout` qui y accueillira nos éléments d'interface imbriqués.
 
 ```python
 w = QWidget()
@@ -217,6 +239,7 @@ Si on exécute maintenant, une fenêtre vide devrait apparaitre. C'est normal : 
 
 :::{tip}
 :class: dropdown
+Nous pouvons instancier les objets de nos différents widgets comme ceci :
 ```python
 # Le paramètre "text" de QLabel permet
 # de définir le texte que le label va prendre
@@ -224,9 +247,9 @@ label = QLabel(text="Entrez le chemin vers l'image à convertir :")  
 
 champ_text = QLineEdit()
 
-bouton = QPushButton(text="CONVERTIR!")     # Pareil pour le bouton
+bouton_conversion = QPushButton(text="CONVERTIR!")     # Pareil pour le bouton
 
-ascii_art = QTextEdit()
+result_ascii_art = QTextEdit()
 ```
 :::
 
@@ -239,51 +262,61 @@ ascii_art = QTextEdit()
 ```python
 layout.addWidget(label)
 layout.addWidget(champ_text)
-layout.addWidget(bouton)
-layout.addWidget(ascii_art)
+layout.addWidget(bouton_conversion)
+layout.addWidget(result_ascii_art)
 ```
 :::
 
 Lancez : l'interface est dessinée!
+
+/!\ TODO: screenshot interface sur Windows
 
 Il ne nous restera qu'à brancher le bouton et le champ à notre code afin que notre petit programme réagisse aux interactions avec l'utilisateurice.
 
 
 ### 2 · Évènements
 
-À présent, on va rendre notre interface interactive, afin que quelque chose se passe lorsque l'on clique sur le bouton.
+À présent, nous allons rendre notre interface interactive, afin que quelque chose puisse se passer lorsque l'on clique sur le bouton.
 
-On va faire 2 choses ici :
-- Récupérer le contenu du champ
-- Brancher le bouton à un code à exécuter lorsqu'il est pressé
+Ici, nous allons faire plusieurs choses :
+* Récupérer le contenu du champ afin de récupérer le chemin de l'image à traiter
+* Brancher le bouton à un code qu'on voudra exécuter lorsqu'il est pressé, et qui fera les actions suivantes :
+    * Appeler le code de conversion image -> ASCII, avec le chemin de l'image en paramètre, et récupérer son résultat (l'image convertie en une chaine de caractères ASCII)
+    * Remplacer le contenu du widget de type `QTextEdit` par la chaine de caractères générée par la fonction de conversion
 
 
 #### 2a) Réutilisation du code du TD5
 
-👉 Récupérez votre code du TD Glitch et mettez-le en une fonction, qu'on pourra par exemple appeler `convertir_image_en_ascii`. Elle prendra en **paramètre d'entrée** une variable qui contiendra le **chemin du fichier** où se trouver le fichier qu'on voudra corrompre.
+👉 Récupérez votre code du [TD ASCII](./td-ascii.md) et faites en une fonction, qu'on pourra par exemple appeler `convertir_image_en_ascii`. Elle prendra en unique **paramètre d'entrée** une variable `chemin` qui contiendra le **chemin du fichier** où se trouvera le fichier qu'on voudra corrompre.
 
 :::{note}
-Quelques modifications de votre code devront probablement être faites en conséquence pour utiliser la variable de ce paramètre comme chemin à scanner.
+Quelques modifications de votre code devront probablement être faites en conséquence afin d'utiliser la variable de ce paramètre comme chemin à scanner.
 :::
 
 
 #### 2b) Définition de la fonction de l'évènement correspondant au clic
 
-👉 Créez une petite fonction [`click`](https://www.youtube.com/watch?v=nK3mbxs7IOU) qui :
-* ne prendra pas de paramètres,
-* récupérera le contenu du champ de texte `QLineEdit`,
-* puis appellera la fonction `convertir_image_en_ascii` créée en [(2a)](#2a-réutilisation-du-code-du-td5) en utilisant le contenu du champ de texte comme paramètre.
+👉 Créez une petite fonction [`click`](https://www.youtube.com/watch?v=nK3mbxs7IOU), qui ne **prend pas de paramètre** (il n'y aura donc rien à mettre entre ses `()`) et qui :
+* récupérera le contenu du champ de texte `QLineEdit` dans une variable (qu'on pourrait appeler `chemin_fichier`),
+* appellera la fonction `convertir_image_en_ascii` créée en [(2a)](#2a-réutilisation-du-code-du-td5), en utilisant le contenu du champ de texte précédemment récupéré comme paramètre, et qui stockera le résultat de la conversion dans une variable `image_en_ascii`.
+* puis remplacera le contenu du widget `QTextEdit` par la chaine de caractères résultant de notre conversion que nous venons de stocker.
 
-:::{note}
-La méthode d'un objet `QLineEdit` pour récupérer son contenu est `.text()` !
+:::{admonition} Quelques méthodes utiles
+:class: note
+La méthode d'un objet `QLineEdit` pour récupérer son contenu est `.text()`.<br />
+Elle **renvoie** une chaîne de caractères correspondant à ce qui se trouve actuellement dans le champ de texte.
+
+La méthode de l'objet `QTextEdit` qui remplace le contenu de ce widget est `.setText(nouveau_texte)`<br />
+(où `nouveau_texte` est une variable **passée en paramètre** contenant le texte que l'on souhaite mettre dans le cadre éditable de texte `QTextEdit`)
 :::
 
 :::{admonition} Création de la fonction `click()`
 :class: tip, dropdown
 ```python
 def click():
-    chemin_fichier = champ_text.text()
-    convertir_image_en_ascii(chemin_fichier)
+    chemin_fichier = champ_text.text()
+    image_en_ascii = convertir_image_en_ascii(chemin_fichier)
+    result_ascii_art.setText(image_en_ascii)
 ```
 :::
 
@@ -299,25 +332,26 @@ Il s'agit de brancher un évènement (ou *slot*) à une fonction, un évènement
 
 Nous utiliserons la méthode `.connect()` de cet attribut pour y renseigner une fonction à exécuter lorsque cet évènement est déclenché.
 
-```python
-bouton.clicked.connect(click)
-```
-
 :::::{warning}
 Puisqu'on passe la **fonction** à `connect()`, comme si c'était une variable, on ne MET PAS les `()` après `click` ! Si on met les `()`, Python va chercher à l'exécuter !
 :::::
 :::
 
+:::{tip}
+:class: dropdown
+Le bouton `bouton_conversion` permettant de lancer la conversion se connectera donc à la fonction `click`, décrivant son comportement, par le biais de cette ligne :
 
-## Partie 3
-
-### Packaging en .exe
+```python
+bouton_conversion.clicked.connect(click)
+```
+:::
 
 
 ## EPILOGUE
 
-Pour celleux qui souhaiteraient aller plus loin dans le développement de cet outil :
+Pour celleux qui souhaiteraient aller plus loin dans le développement de cet outil, vous pouvez allez plus loin en :
 
-* Vérifier que le chemin entré dans le champ de texte existe bien
-* Vérifier qu'il s'agisse bien d'un fichier image *(.jpg, .png...)* que l'on veut corrompre (vous pouvez utiliser [`os.path.splitext`](https://docs.python.org/fr/3/library/os.path.html#os.path.splitext) pour séparer l'extension du reste du chemin)
-* Ajoutez un bouton "Parcourir" pour pouvoir ouvrir un navigateur de fichier (un *file picker* : utiliser [`PySide2.QtWidgets.QFileDialog.getOpenFileName()`](https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QFileDialog.html?highlight=file#PySide2.QtWidgets.PySide2.QtWidgets.QFileDialog.getOpenFileName) )
+* Vérifiant que le chemin entré dans le champ de texte **existe bien**
+* Vérifiant qu'il s'agisse bien d'un fichier image *(.jpg, .png...)* que l'on veut corrompre (vous pouvez utiliser [`os.path.splitext`](https://docs.python.org/fr/3/library/os.path.html#os.path.splitext) pour séparer l'extension du reste du chemin)
+* Ajoutant un bouton "Parcourir" pour pouvoir ouvrir un navigateur de fichier (un *file picker* : utiliser [`PySide2.QtWidgets.QFileDialog.getOpenFileName()`](https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QFileDialog.html?highlight=file#PySide2.QtWidgets.PySide2.QtWidgets.QFileDialog.getOpenFileName) )
+* Changeant cet outil en `.exe` (avec *PyInstaller* par exemple)
