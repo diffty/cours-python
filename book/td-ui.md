@@ -152,13 +152,13 @@ Comme expliqué dans l'encadré de la [partie 1c)](#c-créer-un-widget-qlabel), 
 ![](./img/td-ui-app-wireframe2.png)
 
 Les différents éléments de notre interface sont :
-* une fenêtre **QDialog** : une fenêtre simple, sans menu
+* une fenêtre **QDialog** : un fenêtre vide dans lequel nous imbriquerons nos autres *widgets*, disposés selon un *layout* particulier.
 * un widget **QLabel** : affiche un simple texte, **non éditable** par l'utilisateurice, permettant de transmettre des informations.
 * un widget **QLineEdit** : un champ de texte, **éditable** par l'utilisateurice. Permet de récupérer des informations de sa part.
 * un widget **QPushButton** : un bouton. Permet d'effectuer une ou plusieurs actions lorsque l'utilisateurice clique dessus.
 * un widget **QTextEdit** : un champ de texte multiligne, **éditable** par l'utilisateurice. Peut recevoir du texte formatté avec différents styles d'écriture. Assez simple pour afficher un texte brut (comme on va faire ici), mais assez puissant pour créer un petit logiciel de traitement de texte complet.
 
-Ces éléments sont disposés dans l'interface grâce à des **layouts**, qui contiennent autant de *widgets* qu'on le souhaite, et qui se chargent de les disposer d'une façon particulière dans l'espace de notre fenêtre d'application.
+Tous ces éléments sont disposés dans l'interface grâce à des **layouts**, qui contiennent autant de *widgets* qu'on le souhaite, et qui se chargent de les disposer d'une façon particulière dans l'espace de notre fenêtre d'application.
 
 Ici, nous pouvons voir que les éléments de notre brouillon d'interface sont disposés **à la verticale**. Nous pourrons donc utiliser un *layout* empilant les éléments de manière verticale, appelé `QVBoxLayout`.
 
@@ -169,9 +169,9 @@ De la même façon, `QHBoxLayout` permetterait, lui, de placer les widgets les u
 ![](./img/td-ui-app-wireframe3.png)
 
 
-#### 1a) Importer les classes des widgets à utiliser
+#### 1a) Importation des classes de widgets
 
-👉 Importez les classes `QWidget`, `QLineEdit`, `QPushButton` et `QVBoxLayout` depuis le module `PySide2.QtWidgets`.
+👉 Importez les classes `QDialog`, `QLineEdit`, `QPushButton` et `QVBoxLayout` depuis le module `PySide2.QtWidgets`.
 
 (voir [Partie 1-3a](#3a-importer-qapplication-et-qlabel))
 
@@ -198,34 +198,33 @@ N'oubliez pas d'appeler la méthode `.exec()` de votre instance en **toute fin d
 :::{admonition} Instancier un objet d'une classe de layout
 :class: tip, dropdown
 ```python
-layout = QVBoxLayout()
+layout_fenetre = QVBoxLayout()
 ```
 :::
 
 
-#### 1d) Créer un QWidget principal
+#### 1d) La fenêtre principale
 
 Une application créée avec PySide fonctionne selon le principe d'une hiérarchie de *widgets* imbriqués, parentés les uns aux autres. L'application aura donc tout en haut de sa hiérarchie un *widget principal*, dans lesquels nous imbriquerons tous les autres.
 
-Le *widget* principal d'une application (un peu comme le `QLabel` de la [partie 1](#3c-créer-un-widget-qlabel)) doit forcément être de type `QWidget` pour prendre cette place d'élément principal de l'interface, élément duquel toute la disposition de notre interface va découler. Un *layout* ne peut pas avoir ce rôle, mais ce n'est pas grave, car nous pouvons assigner un *layout* à un *widget* de base afin de le remplir de *widgets* !
+Le *widget* principal de notre application (un peu comme le `QLabel` de la [partie 1](#3c-créer-un-widget-qlabel)) sera ici un élément représentant une fenêtre, un `QDialog` ! On pourra ensuite y assigner un *layout* afin d'indiquer comment seront disposés les éléments d'interface que nous allons attacher à l'intérieur.
 
 La hiérarchie de notre fenêtre sera définie comme ceci :
 ```
-QDialog (la fenêtre)
-└─ QWidget (le principal)
-   └─ QVBoxLayout (le layout attaché au widget principal)
-      ├─ QLabel
-      ├─ QLineEdit
-      ├─ QPushButton
-      └─ QTextEdit 
+QDialog (le widget principal qui représentera la fenêtre)
+└─ QVBoxLayout (le layout attaché au widget principal)
+    ├─ QLabel
+    ├─ QLineEdit
+    ├─ QPushButton
+    └─ QTextEdit 
 ```
 
-👉 Nous allons donc devoir créer un `QWidget` principal, qui créera la fenêtre, et dans lequel nous assignerons un *layout* `QHBoxLayout` qui y accueillira nos éléments d'interface imbriqués.
+👉 Nous allons donc devoir créer un `QDialog` principal, qui créera la fenêtre, et auquel nous assignerons un *layout* `QHBoxLayout` qui y accueillera nos éléments d'interface imbriqués.
 
 ```python
-w = QWidget()
-w.setLayout(layout)
-w.show()
+fenetre_principale = QDialog()
+fenetre_principale.setLayout(layout_fenetre)
+fenetre_principale.show()
 ```
 
 :::{note}
@@ -253,23 +252,38 @@ result_ascii_art = QTextEdit()
 ```
 :::
 
+#### 1f) Changement du titre de la fenêtre
 
-#### 1f) Empilement des widgets dans le layout
+On peut changer le titre de la fenêtre en utilisant la méthode `.setWindowTitle()` des `QDialog` ! Cette méthode prend en unique paramètre, une chaine de caractères qui sera votre nouveau titre.
+
+👉 Utilisez-la pour changer votre fenêtre en le nom de votre choix.
+
+:::{tip}
+:class: dropdown
+Par exemple, si je veux titrer ma fenêtre "ASCIIP" :
+
+```python
+fenetre_principale.setWindowTitle("ASCIIP")
+```
+:::
+
+
+#### 1g) Empilement des widgets dans le layout
 
 👉 Ajouter tous ces widgets à notre layout
 
 :::{tip}
 ```python
-layout.addWidget(label)
-layout.addWidget(champ_text)
-layout.addWidget(bouton_conversion)
-layout.addWidget(result_ascii_art)
+layout_fenetre.addWidget(label)
+layout_fenetre.addWidget(champ_text)
+layout_fenetre.addWidget(bouton_conversion)
+layout_fenetre.addWidget(result_ascii_art)
 ```
 :::
 
 Lancez : l'interface est dessinée!
 
-/!\ TODO: screenshot interface sur Windows
+![](./img/td-ui-interface-empty.png)
 
 Il ne nous restera qu'à brancher le bouton et le champ à notre code afin que notre petit programme réagisse aux interactions avec l'utilisateurice.
 
@@ -345,6 +359,40 @@ Le bouton `bouton_conversion` permettant de lancer la conversion se connectera d
 bouton_conversion.clicked.connect(click)
 ```
 :::
+
+#### 2d) Testez !
+
+Lancez votre script, mettez un chemin valide vers une image, et appuyez sur le bouton CONVERTIR!
+
+Vous devriez avoir un résultat s'afficher dans la boîte de texte centrale. Cependant, il n'est pas impossible que obteniez ayez un résultat tel que ceci :
+
+![](./img/td-ui-interface-brokenfont.png)
+
+Heureusement, il y a une explication, et une solution !
+
+
+#### 3) Réglage de la typo
+
+Le souci illustré ci-dessus réside dans l'utilisation d'une police de caractère employant des caractères n'ayant pas tous la même largeur.
+
+Les caractères d'un ASCII art étant tributaires d'une largeur fixe afin d'être alignés comme il faut, il va donc falloir choisir une typo s'affichant de cette façon afin d'obtenir le résultat souhaité !
+
+:::{admonition} Changer la typo par défaut d'un `QTextEdit`
+:class: tip
+On peut changer la polcie de caractères utilisée par défaut grâce à la méthode `.setFontFamily()`.
+
+Cette méthode prend en unique paramètre le nom de la police de caractères que vous souhaitez utiliser pour votre texte.
+
+Pour faire simple, nous pouvons utiliser une police à largeur fixe universelle disponible sur tous les systèmes d'exploitation, appelée `monospace` !
+
+```python
+result_ascii_art.setFontFamily("monospace")
+```
+:::
+
+![](./img/td-ui-interface.png)
+
+Voilà qui est mieux !
 
 
 ## EPILOGUE
